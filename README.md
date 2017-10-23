@@ -1,7 +1,7 @@
 # matrix-led
 
 This repository contains the following: 
-  - `MatrixLed` class which is used to command Creator MATRIX One Everloop LED grid
+  - `MatrixLed` class which is used to command [Creator MATRIX One](https://creator.matrix.one/#!/index) Everloop LED grid
   
   - `LedRunner` class which simplifies running repeated (led) commands on background
   
@@ -9,6 +9,3 @@ This repository contains the following:
   
 ## Usage
   See `app.py`
-  
-## API docs
-Coming soon...
