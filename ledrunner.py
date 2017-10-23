@@ -11,17 +11,16 @@ class LedRunner:
             func(**args)
 
     def start(self, func, **kwargs):
-        if self.thread is not None and self.thread.isAlive():
-            self.stop()
+        self.stop()
         self.running = True
         self.thread = threading.Thread(target=self.__repeat, args=(func, kwargs))
         self.thread.start()
 
     def stop(self):
-        self.running = False
-        self.thread.join()
+        if self.thread is not None and self.thread.isAlive():
+            self.running = False
+            self.thread.join()
 
     def once(self, func, **kwargs):
-        if self.thread is not None and self.thread.isAlive():
-            self.stop()
+        self.stop()
         func(**kwargs)

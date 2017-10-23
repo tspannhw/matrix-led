@@ -22,10 +22,6 @@ def display_title():
     print '**** MATRIX ONE Everloop LED blinker ****'
     print '*****************************************\n'
 
-def repeat(func, color):
-    while (running_task is not None):
-        func(**color)
-
 choice = ''
 while choice != 'q':
     os.system('clear')
@@ -36,17 +32,16 @@ while choice != 'q':
     print '[q] Quit program\n'
 
     choice = raw_input('> ')
-    running_task = None
 
     if choice == '1':
-        color = get_color()
-        runner.once(matrix.solid, **color)
+        runner.once(matrix.solid, **get_color())
     elif choice == '2':
-        color = get_color()
-        runner.start(matrix.loading_bar, **color)
+        runner.start(matrix.loading_bar, **get_color())
     elif choice == '3':
-        runner.once(matrix.solid, **{'red': 0, 'green': 0, 'blue': 0, 'white': 0})
+        runner.once(matrix.solid)
     elif choice == 'q':
+        runner.stop()
+        runner.once(matrix.solid)
         matrix.disconnect()
         os.system('clear')
         print 'Bye...\n'

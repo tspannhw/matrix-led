@@ -15,7 +15,6 @@ class MatrixLed:
         context = zmq.Context()
         self.address = 'tcp://{0}:{1}'.format(matrix_ip, PORT)
         self.socket = context.socket(zmq.PUSH)
-        self.running_task = None
 
     def __show(self, leds):
         config = driver_pb2.DriverConfig()
@@ -30,10 +29,6 @@ class MatrixLed:
         ledValue.white = args.get('white', 0)
         return ledValue
 
-#    def __repeat(func, color):
-#        while (self.running_task is not None):
-            
-        
     def connect(self):
         self.socket.connect(self.address)
 
