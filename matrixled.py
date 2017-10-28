@@ -10,7 +10,18 @@ from matrix_io.proto.malos.v1 import io_pb2
 PORT = 20021
 LED_COUNT = 35
 
+def get_led(**args):
+    ledValue = io_pb2.LedValue()
+    ledValue.red = args.get('red', 0)
+    ledValue.green = args.get('green', 0)
+    ledValue.blue = args.get('blue', 0)
+    ledValue.white = args.get('white', 0)
+    return ledValue
+
 class MatrixLed:
+
+    _dark = get_led()
+
     def __init__(self, matrix_ip='127.0.0.1'):
         context = zmq.Context()
         self.address = 'tcp://{0}:{1}'.format(matrix_ip, PORT)
@@ -20,14 +31,6 @@ class MatrixLed:
         config = driver_pb2.DriverConfig()
         config.image.led.extend(leds)
         self.socket.send(config.SerializeToString())
-    
-    def __getColor(self, **args):
-        ledValue = io_pb2.LedValue()
-        ledValue.red = args.get('red', 0)
-        ledValue.green = args.get('green', 0)
-        ledValue.blue = args.get('blue', 0)
-        ledValue.white = args.get('white', 0)
-        return ledValue
 
     def connect(self):
         self.socket.connect(self.address)
@@ -35,23 +38,60 @@ class MatrixLed:
     def disconnect(self):
         self.socket.disconnect(self.address)
 
-    def solid(self, **colors):
+    def solid(self, color=_dark):
+        """ Light all leds in single colour """
         leds = []
         for led in range(LED_COUNT):
-            leds.append(self.__getColor(**colors))
+            leds.append(color)
         self.__show(leds)
 
-    def loading_bar(self, **colors):
-        if all(val == 0 for key,val in colors.iteritems()):
+    def loading_bar(self, color, base=_dark, delay=0.01):
+        """ Light one led at a time until all leds are lit """
+        if color == base:
             self.disconnect()
-            sys.exit('Cannot run loading bar if all LED values are 0')
-        color = self.__getColor(**colors)
-        dark = self.__getColor(red=0, green=0, blue=0, white=0)
+            sys.exit('Color and base cannot be identical')
         count = 0
         while count < LED_COUNT:
             count += 1
             lit_leds = [color for led in range(count)]
-            dark_leds = [dark for led in range(LED_COUNT - count)]
-            leds = lit_leds + dark_leds
+            base_leds = [base for led in range(LED_COUNT - count)]
+            leds = lit_leds + base_leds
             self.__show(leds)
             time.sleep(0.01)
+            
+    def single(self, color, position=0):
+        """ Light a single led """
+        if position < 0 or position >= LED_COUNT:
+            self.disconnect()
+            sys.exit('Position must be a number between 0 and 34')
+        leds = [self._dark for led in range(LED_COUNT)]
+        leds[position] = color
+        self.__show(leds)
+        
+        
+        
+        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            

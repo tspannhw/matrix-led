@@ -8,12 +8,12 @@ class LedRunner:
 
     def __repeat(self, func, args):
         while self.running:
-            func(**args)
+            func(*args)
 
-    def start(self, func, **kwargs):
+    def start(self, func, *args):
         self.stop()
         self.running = True
-        self.thread = threading.Thread(target=self.__repeat, args=(func, kwargs))
+        self.thread = threading.Thread(target=self.__repeat, args=(func, args))
         self.thread.start()
 
     def stop(self):
@@ -21,6 +21,6 @@ class LedRunner:
             self.running = False
             self.thread.join()
 
-    def once(self, func, **kwargs):
+    def once(self, func, *args):
         self.stop()
-        func(**kwargs)
+        func(*args)
